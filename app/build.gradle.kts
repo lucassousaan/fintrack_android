@@ -59,7 +59,6 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.compose.charts)
     ksp(libs.room.compiler.ksp)
     ksp(libs.hilt.compiler.ksp)
     testImplementation(libs.junit)
