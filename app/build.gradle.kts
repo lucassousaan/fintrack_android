@@ -29,6 +29,9 @@ android {
             )
         }
     }
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -62,6 +65,8 @@ dependencies {
     ksp(libs.room.compiler.ksp)
     ksp(libs.hilt.compiler.ksp)
     testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.truth)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
