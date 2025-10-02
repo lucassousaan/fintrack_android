@@ -2,6 +2,7 @@ package com.example.fintrack.data.repository
 
 import com.example.fintrack.domain.model.CategorySpending
 import com.example.fintrack.domain.model.Transaction
+import com.example.fintrack.domain.model.TransactionType
 import com.example.fintrack.domain.repository.TransactionRepository
 
 class FakeTransactionRepository: TransactionRepository {
@@ -29,11 +30,21 @@ class FakeTransactionRepository: TransactionRepository {
     }
 
     override suspend fun getLastFiveTransactions(): List<Transaction> {
-        TODO("Not yet implemented")
+        return transactions
+            .sortedByDescending { it.date }
+            .take(5)
     }
 
     override suspend fun getSpendingByCategory(startDate: Long, endDate: Long): List<CategorySpending> {
-        TODO("Not yet implemented")
+        return transactions
+            .filter { it.type == TransactionType.EXPENSE && it.date in startDate..endDate }
+            .groupBy { it.category }
+            .map { (categoryName, transactionsInGroup) ->
+                CategorySpending(
+                    categoryName = categoryName,
+                    totalAmount = transactionsInGroup.sumOf { it.amount }
+                )
+            }
     }
 
 }

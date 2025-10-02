@@ -19,7 +19,7 @@ class CalculateBalanceUseCaseTest {
     }
 
     @Test
-    fun `calcula saldo sem transações e retorna zero`() = runTest {
+    fun `calcula saldo sem transacoes e retorna zero`() = runTest {
         val balance = calculateBalanceUseCase()
 
         assertThat(balance).isZero()
@@ -37,5 +37,33 @@ class CalculateBalanceUseCaseTest {
         val balance = calculateBalanceUseCase()
 
         assertThat(balance).isEqualTo(744.0)
+    }
+
+    @Test
+    fun `calcula saldo apenas com receitas e retorna a soma`() = runTest {
+        val transactionsToInsert = listOf(
+            Transaction(1, "Salário", 1500.0, TransactionType.INCOME, "Salário", 1759345567000),
+            Transaction(2, "Bonus", 700.0, TransactionType.INCOME, "Salário", 1759345567000)
+        )
+
+        fakeRepository.addTransactionsForTest(transactionsToInsert)
+
+        val balance = calculateBalanceUseCase()
+
+        assertThat(balance).isEqualTo(2200.0)
+    }
+
+    @Test
+    fun `calcula saldo apenas com despesas e retorna a soma final`() = runTest {
+        val transactionsToInsert = listOf(
+            Transaction(1, "Aluguel", 700.0, TransactionType.EXPENSE, "Moradia", 1759345567000),
+            Transaction(2, "Condomínio", 100.0, TransactionType.EXPENSE, "Moradia", 1759345567000)
+        )
+
+        fakeRepository.addTransactionsForTest(transactionsToInsert)
+
+        val balance = calculateBalanceUseCase()
+
+        assertThat(balance).isEqualTo(-800.0)
     }
 }
